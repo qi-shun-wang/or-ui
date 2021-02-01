@@ -1,3 +1,5 @@
 import UIView from "./UIView";
+import LayoutConstraint from "./LayoutConstraint";
+import UIWindow from "./UIWindow";
 
-export * from "./UIView";  
+export { UIView, LayoutConstraint, UIWindow };

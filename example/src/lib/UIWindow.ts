@@ -4,8 +4,6 @@ import { CGPoint, CGRect, CGRectZero, CGSize } from './CG';
 export default class UIWindow extends UIView {
   constructor() {
     super(CGRectZero);
-    this.id = 'keyWindow';
-    this.element.id = this.id;
     this.enableAutoResize = true;
 
     this.element.style.position = 'absolute';

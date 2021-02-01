@@ -1,57 +1,75 @@
-import { CGPoint, CGRect, CGRectZero, CGSize } from './CG';
-
+import { CGPoint, CGRect, CGRectZero, CGSize } from "./CG";
+import { Util } from "./Util";
+import LayoutConstraint from "./LayoutConstraint";
 class UIView {
-    static viewMap: Map<string, UIView> = new Map<string, UIView>();
-    static idLength = 12
-    static generateID(): string {
+  private static viewMap: Map<string, UIView> = new Map<string, UIView>();
+  private static idLength = 6;
+  readonly id: string;
 
-        const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let randomString = '';
-        for (let i = 0; i < UIView.idLength; i++) {
-            const randomPoz = Math.floor(Math.random() * charSet.length);
-            randomString += charSet.substring(randomPoz, randomPoz + 1);
-        }
-        if (this.viewMap.has(randomString)) {
-            return UIView.generateID()
-        } else {
-            return randomString;
-        }
-    }
-    id: string;
+  element: HTMLElement;
 
-    element: HTMLElement;
+  superView?: UIView;
+  subviews: UIView[] = [];
 
-    superView?: UIView
-    childViews: Map<string, UIView> = new Map<string, UIView>();
+  frame: CGRect = CGRectZero;
 
-    frame: CGRect = CGRectZero;
+  backgroundColor = "white";
 
-    backgroundColor = 'white';
+  enableAutoResize = true;
 
-    enableAutoResize = true;
+  readonly constraints: LayoutConstraint[] = [];
+  //   addConstraint(constraint: LayoutConstraint): void {
+  //     this.constraints.push(constraint);
+  //   }
+  //   addConstraints(constraints: LayoutConstraint[]): void {
+  //     this.constraints.push(...constraints);
+  //   }
+  //   removeConstraint(constraint: LayoutConstraint): void {
+  //     const exist = this.constraints.findIndex(
+  //       (item) => item.id === constraint.id
+  //     );
+  //     if (exist != null) {
+  //       delete this.constraints[exist];
+  //     }
+  //   }
+  //   removeConstraints(constraints: LayoutConstraint[]): void {
+  //     const exist = this.constraints.findIndex(
+  //         (item) => item.id === constraint.id
+  //       );
+  //       if (exist != null) {
+  //         delete this.constraints[exist];
+  //       }
+  //   }
 
-    constructor(frame: CGRect) {
-        this.element = document.createElement('div');
-        this.id = UIView.generateID();
-        // this.element.id = this.id;
-        // this.element.style.position = 'absolute';
-        // this.updatePoint(frame.point);
-        // this.updateSize(frame.size);
-    }
-    setBackgroundColor(color: string): void {
-        this.backgroundColor = color
-        this.element.style.backgroundColor = color
-    }
- 
-    addView(subView: UIView) {
-        subView.superView = this
-        this.childViews.set(subView.id, subView);
-        this.element.appendChild(subView.element);
-    }
-    removeSubView(subview:UIView){
-        this.element.removeChild(subview.element)
-        
-    }
+  constructor(frame: CGRect) {
+    this.element = document.createElement("div");
+    this.id = Util.generateID(UIView.idLength, (id) => {
+      return UIView.viewMap.has(id);
+    });
+    this.element.id = this.id;
+    // this.element.style.position = 'absolute';
+    // this.updatePoint(frame.point);
+    // this.updateSize(frame.size);
+  }
+  setBackgroundColor(color: string): void {
+    this.backgroundColor = color;
+    this.element.style.backgroundColor = color;
+  }
+
+  addSubview(view: UIView): void {
+    view.superView = this;
+    this.subviews.push(view);
+    this.element.appendChild(view.element);
+  }
+
+  removeFromSuperview(): void {
+    this.subviews.forEach((v) => {
+      v.removeFromSuperview();
+    });
+
+    UIView.viewMap.delete(this.id);
+    this.element.remove();
+  }
 }
 
 // updatePoint(point: CGPoint) {
@@ -96,7 +114,6 @@ class UIView {
 //     this.element.style.left = `${point.x}px`;
 //     this.element.style.top = `${point.y}px`;
 // }
-
 
 // removeSubView(subView: UIView) {
 //     this.childViews.delete(subView.id);
@@ -156,4 +173,4 @@ class UIView {
 //         cb();
 //     };
 // }
-export default UIView
+export default UIView;
