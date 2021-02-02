@@ -1,75 +1,76 @@
 import { CGPoint, CGRect, CGRectZero, CGSize } from "./CG";
 import { Util } from "./Util";
 import LayoutConstraint from "./LayoutConstraint";
+
 class UIView {
-  private static viewMap: Map<string, UIView> = new Map<string, UIView>();
-  private static idLength = 6;
-  readonly id: string;
+    private static viewMap: Map<string, UIView> = new Map<string, UIView>();
+    private static idLength = 6;
+    readonly id: string;
 
-  element: HTMLElement;
+    element: HTMLElement;
 
-  superView?: UIView;
-  subviews: UIView[] = [];
+    superView?: UIView;
+    subviews: UIView[] = [];
 
-  frame: CGRect = CGRectZero;
+    frame: CGRect = CGRectZero;
 
-  backgroundColor = "white";
+    backgroundColor = "white";
 
-  enableAutoResize = true;
+    enableAutoResize = true;
 
-  readonly constraints: LayoutConstraint[] = [];
-  //   addConstraint(constraint: LayoutConstraint): void {
-  //     this.constraints.push(constraint);
-  //   }
-  //   addConstraints(constraints: LayoutConstraint[]): void {
-  //     this.constraints.push(...constraints);
-  //   }
-  //   removeConstraint(constraint: LayoutConstraint): void {
-  //     const exist = this.constraints.findIndex(
-  //       (item) => item.id === constraint.id
-  //     );
-  //     if (exist != null) {
-  //       delete this.constraints[exist];
-  //     }
-  //   }
-  //   removeConstraints(constraints: LayoutConstraint[]): void {
-  //     const exist = this.constraints.findIndex(
-  //         (item) => item.id === constraint.id
-  //       );
-  //       if (exist != null) {
-  //         delete this.constraints[exist];
-  //       }
-  //   }
+    readonly constraints: LayoutConstraint[] = [];
+    //   addConstraint(constraint: LayoutConstraint): void {
+    //     this.constraints.push(constraint);
+    //   }
+    //   addConstraints(constraints: LayoutConstraint[]): void {
+    //     this.constraints.push(...constraints);
+    //   }
+    //   removeConstraint(constraint: LayoutConstraint): void {
+    //     const exist = this.constraints.findIndex(
+    //       (item) => item.id === constraint.id
+    //     );
+    //     if (exist != null) {
+    //       delete this.constraints[exist];
+    //     }
+    //   }
+    //   removeConstraints(constraints: LayoutConstraint[]): void {
+    //     const exist = this.constraints.findIndex(
+    //         (item) => item.id === constraint.id
+    //       );
+    //       if (exist != null) {
+    //         delete this.constraints[exist];
+    //       }
+    //   }
 
-  constructor(frame: CGRect) {
-    this.element = document.createElement("div");
-    this.id = Util.generateID(UIView.idLength, (id) => {
-      return UIView.viewMap.has(id);
-    });
-    this.element.id = this.id;
-    // this.element.style.position = 'absolute';
-    // this.updatePoint(frame.point);
-    // this.updateSize(frame.size);
-  }
-  setBackgroundColor(color: string): void {
-    this.backgroundColor = color;
-    this.element.style.backgroundColor = color;
-  }
+    constructor(frame: CGRect) {
+        this.element = document.createElement("div");
+        this.id = Util.generateID(UIView.idLength, (id) => {
+            return UIView.viewMap.has(id);
+        });
+        this.element.id = this.id;
+        // this.element.style.position = 'absolute';
+        // this.updatePoint(frame.point);
+        // this.updateSize(frame.size);
+    }
+    setBackgroundColor(color: string): void {
+        this.backgroundColor = color;
+        this.element.style.backgroundColor = color;
+    }
 
-  addSubview(view: UIView): void {
-    view.superView = this;
-    this.subviews.push(view);
-    this.element.appendChild(view.element);
-  }
+    addSubview(view: UIView): void {
+        view.superView = this;
+        this.subviews.push(view);
+        this.element.appendChild(view.element);
+    }
 
-  removeFromSuperview(): void {
-    this.subviews.forEach((v) => {
-      v.removeFromSuperview();
-    });
+    removeFromSuperview(): void {
+        this.subviews.forEach((v) => {
+            v.removeFromSuperview();
+        });
 
-    UIView.viewMap.delete(this.id);
-    this.element.remove();
-  }
+        UIView.viewMap.delete(this.id);
+        this.element.remove();
+    }
 }
 
 // updatePoint(point: CGPoint) {

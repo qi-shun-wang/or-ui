@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const p1: CGPoint = { x: 0, y: 2 };
   const view: UIView = new UIView(CGRectZero);
   const window = new UIWindow();
+  view.setBackgroundColor('white')
+  window.addSubview(view)
   window.setBackgroundColor("red");
   document.body.appendChild(window.element);
   console.log(CGPointZero);
